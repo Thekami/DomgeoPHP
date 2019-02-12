@@ -1,0 +1,14 @@
+
+			hola
+
+			hola
+
+			HOST: localhost
+
+			content-length: 263
+
+			content-type: application/x-www-form-urlencoded
+
+			cookie: PHPSESSID=lntfvceqtmaefhijkqs66dlcl2
+
+			cositec: C0s1T3c!2ol7$
