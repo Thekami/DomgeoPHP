@@ -8,7 +8,7 @@
 
 	    const AUTH = "123";
 
-		public function log($texto){
+		public static function log($texto){
 			$myfile = fopen("log.txt", "a") or die("Unable to open file!");
 
 			$txt = "
@@ -19,7 +19,7 @@
 		
 		}
 
-		public function authorization(){
+		public static function authorization(){
 			
 			$headers = apache_request_headers();
 			
@@ -33,7 +33,7 @@
 
 		}
 
-		public function base64_to_jpeg($base64_string, $service, $name) {
+		public static function base64_to_jpeg($base64_string, $service, $name) {
 			// $dir = "evidencias/{$service}";
 			// if(!is_dir($dir)) 
         		// mkdir($dir, 0766);

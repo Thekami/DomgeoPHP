@@ -1,6 +1,6 @@
 <?php
     define("NOMBRE_HOST", "localhost");// Nombre del host
-    define("BASE_DE_DATOS", "domgeoAPI"); // Nombre de la base de modelos
+    define("BASE_DE_DATOS", "domgeo"); // Nombre de la base de modelos
     define("USUARIO", "root"); // Nombre del usuario
     define("CONTRASENA", "toortoor"); // Constraseña
 

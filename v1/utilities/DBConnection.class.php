@@ -37,7 +37,7 @@
             
         }
 
-        public function next_result(){
+        public static function next_result(){
             self::conect()->next_result();
         }
 
@@ -45,7 +45,7 @@
             return self::conect()->connect_error;
         }
 
-        public function query_assoc($consult){
+        public static function query_assoc($consult){
             $vec = array();
 
             if($result = self::query($consult)){
@@ -54,7 +54,7 @@
             }
         }
 
-        public function query_row($consult){
+        public static function query_row($consult){
 
             $vec = array();
             if($result = self::query($consult)){
@@ -63,17 +63,17 @@
             }
         }
 
-        public function query_single_object($consult){
+        public static function query_single_object($consult){
             
             if($result = self::query($consult))
                 return $result->fetch_object();
         }
 
-        public function exit_conect(){
+        public static function exit_conect(){
             mysqli_close(self::conect());
         }
 
-        public function destroy(){
+        public static function destroy(){
             return session_destroy();
         }
      

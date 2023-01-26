@@ -22,7 +22,7 @@
 		const NOT_FOUND = 5;
 	    const MSG_NOT_FOUND = "No se encontraron resultados";
 		
-		public function post($parametros){
+		public static function post($parametros){
 
 			$action = 'get'.ucfirst($parametros[0]);
 
@@ -34,9 +34,9 @@
 		}
 
 		
-		private function getEstados(){
-			$consult = "SELECT * FROM vwEstados";
-
+		private static function getEstados(){
+			$consult = "SELECT cveEdo as clave, nombre FROM estado"; 
+			
 			if($res = DBConnection::query_assoc($consult))
 				return ["estado" => self::SUCCESS, "datos" => $res];
 			else
@@ -44,7 +44,7 @@
 
 		}
 
-		private function getMunicipios(){
+		private static function getMunicipios(){
 			$info = json_decode($_POST['info']);
 			$edo  = $info->edo;
 
@@ -56,7 +56,7 @@
 				throw new ExceptionApi(self::NOT_FOUND, self::MSG_NOT_FOUND, 200);
 		}
 
-		private function getLocalidades(){
+		private static function getLocalidades(){
 			$info = json_decode($_POST['info']);
 			$edo  = $info->edo;
 			$mun  = $info->mun;
@@ -69,7 +69,7 @@
 				throw new ExceptionApi(self::NOT_FOUND, self::MSG_NOT_FOUND, 200);
 		}
 
-		private function getAsentamientos(){
+		private static function getAsentamientos(){
 			$info = json_decode($_POST['info']);
 			$edo  = $info->edo;
 			$mun  = $info->mun;
@@ -84,7 +84,7 @@
 
 		}
 
-		private function getCodigopostal(){
+		private static function getCodigopostal(){
 			$info = json_decode($_POST['info']);
 			$edo  = $info->edo;
 			$mun  = $info->mun;
@@ -99,7 +99,7 @@
 				throw new ExceptionApi(self::NOT_FOUND, self::MSG_NOT_FOUND, 200);
 		}
 
-		private function getInfocp(){
+		private static function getInfocp(){
 			$info = json_decode($_POST['info']);
 			$cp  = $info->cp;
 
