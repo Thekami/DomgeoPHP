@@ -15,7 +15,7 @@
 	const MSG_UNKNOW_RESOURCE = "No se reconoce el recurso al que intentas acceder";
 	const MSG_FORBIDDEN_METHOD = "Método no permitido";
 
-	// Preparar manejo de excepciones
+	// Preparar formato de vista que retornará
 	$formato = isset($_GET['formato']) ? $_GET['formato'] : 'json';
 
 	switch ($formato) {
@@ -27,6 +27,7 @@
 	        $vista = new JsonView();
 	}
 
+	// Preparar manejo de excepciones
 	set_exception_handler(function ($exception) use ($vista) {
 	    $cuerpo = array(
 	        "estado" => $exception->estado,
@@ -46,7 +47,6 @@
 	else
 	    throw new ExceptionApi(UNKNOW_URL, MSG_UNKNOW_URL);
 
-
 	// Obtener recurso
 	$recurso = $parametros[0];
 
@@ -58,7 +58,10 @@
 		throw new ExceptionApi(UNKNOW_RESOURCE, MSG_UNKNOW_RESOURCE, 404);
 
 	$metodo = strtolower($_SERVER['REQUEST_METHOD']);
-
+// echo '<pre>'; 
+// print_r($parametros);
+// echo '</pre>';
+// exit;
 	// Filtrar método
 	switch ($metodo) {
 	    case 'get':
