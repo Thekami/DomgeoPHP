@@ -1,0 +1,13 @@
+DROP PROCEDURE IF EXISTS GETESTADOS;
+--DELIMITER ;;
+CREATE PROCEDURE GETESTADOS(IN _id INT)
+BEGIN
+	SELECT cveEdo as clave, nombre FROM estado WHERE 
+END
+--;;
+--DELIMITER ;
+
+
+DROP VIEW IF EXISTS vwGetEstados;
+CREATE VIEW vwGetEstados AS
+SELECT cveEdo as clave, nombre FROM estado
