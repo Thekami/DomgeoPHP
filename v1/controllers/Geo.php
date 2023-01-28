@@ -24,12 +24,12 @@
 		
 		public static function get($parametros){
 
-			$action = "get".ucfirst($parametros[0]);
+			$action = "get".ucfirst($parametros[0]); // genero el nombre de la función a ejecutar (ObtenerEstados)
 
-			if(Main::authorization())
-				return self::$action($parametros[1]);
+			if(Main::authorization()) // Valida headers
+				return self::$action($parametros[1]); // Ejecuta el llamado a la función
 			else
-				throw new ExceptionApi(self::ACCESS_DENIED, self::MSG_ACCESS_DENIED, 403);
+				throw new ExceptionApi(self::ACCESS_DENIED, self::MSG_ACCESS_DENIED, 403); // Manda una excepción controlada
 
 		}
 		
@@ -39,26 +39,13 @@
 			$body = file_get_contents('php://input'); // obtengo la información que venga en el body de la petición (raw del postman)
 			$param = null;
 
-			/* Si LLEGA algo en el BODY es porque se mandó como parámetro un json */
-			/* Si NO LLEGA algo en el BODY puede ser porque se mandó un parámetro mediante un FROM */
-			/* Si NO LLEGA nada ni por BODY ni por FROM, entonces no llegó nada y se responderá con todos los tados de la tabla*/
-
-			if($body === ""){ // valida que venga algo en el body.
-				if(count($_POST) > 0){	// valida que venga algo por POST.
-					if (isset($_POST['clave'])) // valida que exista la variable clave por POST.
-						$param = json_decode($_POST['clave']); // asigna el parámero.
-					else 
-						throw new ExceptionApi(self::ERROR_PARAMETROS, self::MSG_ERROR_PARAMETROS, 422); // Manda una excepción controlada
-				}
-			}
-			else{
+			if($body !== ""){ // valida si la petición fue realiazada mediante json 
 				$info = json_decode($body); // convierte el json en array de objetos
 				if(isset($info->clave)) // valida que exista el identificador "clave"
-					$param = $info->clave; // asigna el parámero.
+					$param = $info->clave; // genera el parámero.
 				else
 					throw new ExceptionApi(self::ERROR_PARAMETROS, self::MSG_ERROR_PARAMETROS, 422); // Manda una excepción controlada
 			}
-				
 
 			if(Main::authorization()) // Valida headers
 				return self::$action($param); // Ejecuta el llamado a la función
@@ -68,21 +55,30 @@
 		
 		private static function ObtenerEstados($clave = null){
 
-			if (is_null($clave))
-				$consult = "SELECT * FROM vwGetEstados";
-			else
-				$consult = "SELECT * FROM vwGetEstados WHERE clave = $clave";
+			/* si no llega el parámetro, quiere decir que la petición se hizo por form-data o que se quieren leer todos los registros */
 
-			if($res = DBConnection::query_assoc($consult))
+			if (is_null($clave)) { // Si no llega el parámetro
+				if (count($_POST) > 0) { // Verifico que por POST haya llegado algo
+					if (isset($_POST['clave'])) // Verifica que exista el identificador clave
+						$consult = "SELECT * FROM vwGetEstados WHERE clave = " . $_POST['clave']; // Genera la consulta para ver un dato en especifico
+					else
+						throw new ExceptionApi(self::ERROR_PARAMETROS, self::MSG_ERROR_PARAMETROS, 422); // Manda una excepción controlada
+				} else {
+					$consult = "SELECT * FROM vwGetEstados"; // Genera consulta para ver todos los datos
+				}
+			}
+			else{ // Si llegó el parámetro (petición realizada mediante JSON)
+				$consult = "SELECT * FROM vwGetEstados WHERE clave = {$clave}"; // Genera la consulta para ver un dato en especifico
+			}
+				
+			if($res = DBConnection::query_assoc($consult)) // Ejecuta la consulta y retorna un array asociativo 
 				return ["estado" => self::SUCCESS, "datos" => $res];
 			else
 				throw new ExceptionApi(self::NOT_FOUND, self::MSG_NOT_FOUND, 200);
 
 		}
 
-		private static function ObtenerMunicipios(){
-			$info = json_decode($_POST['info']);
-			$edo  = $info->edo;
+		private static function ObtenerMunicipios($data){
 
 			$consult = "CALL SP_GETMUNICIPIOS($edo)";
 			
@@ -147,25 +143,14 @@
 				throw new ExceptionApi(self::NOT_FOUND, self::MSG_NOT_FOUND, 200);
 		}
 
-		private static function ValidaEstructuraEstado($data, $tipo){
+		private static function ValidaEstructuraEstado($data){
 			
 			$response = FALSE;
-
-			switch ($tipo) {
-				case 'raw':
-					# code...
-					break;
-				case 'form':
-					# code...
-					break;
-			}
-
-			if ($data !== NULL && count($data) === 1) 
-				$response = isset($data->clave) ? TRUE : FALSE;
-			else
-				$response = TRUE;
+			if ($data !== NULL && count($data) == 1 && isset($data['clave']))
+	    		$response = TRUE;
 
 	    	return $response;
+
 		}
 
 	
