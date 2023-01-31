@@ -35,41 +35,38 @@
 		
 		public static function post($parametros){
 
-			$action = "Obtener".ucfirst($parametros[0]); // genero el nombre de la función a ejecutar (ObtenerEstados)
-			$body = file_get_contents('php://input'); // obtengo la información que venga en el body de la petición (raw del postman)
-			$param = null;
+			$action  = "Obtener".ucfirst($parametros[0]); // genero el nombre de la función a ejecutar (ObtenerEstados)
+			$body    = file_get_contents('php://input'); // obtengo la información que venga en el body de la petición (raw del postman)
+			$info    = array();
+			$bandera = true;
+			$param   = array(); // genera el parámetro.
 
-			if($body !== ""){ // valida si la petición fue realiazada mediante json 
-				$info = json_decode($body); // convierte el json en array de objetos
-				if(isset($info->clave)) // valida que exista el identificador "clave"
-					$param = $info->clave; // genera el parámero.
-				else
-					throw new ExceptionApi(self::ERROR_PARAMETROS, self::MSG_ERROR_PARAMETROS, 422); // Manda una excepción controlada
+			if($body !== "") // la petición fue realizada por JSON
+				$info = json_decode($body, true); 
+			elseif(count($_POST) > 0) // La petición fue realizada por form-data
+				$info = $_POST;
+
+			if(!empty($info)){
+				$bandera = self::ValidaEstructura($info, $parametros[0]); // valida la estructura de los parámetros enviados
+				foreach ($info as $key => $value) {
+					array_push($param, $value); // Reorganiza los parámetros en una array sencillo
+				}
 			}
 
-			if(Main::authorization()) // Valida headers
+			if(!$bandera) // Si la estrucura de la petición NO es correcta
+				throw new ExceptionApi(self::ERROR_PARAMETROS, self::MSG_ERROR_PARAMETROS, 422); // Manda una excepción controlada
+			elseif(Main::authorization()) // Valida headers
 				return self::$action($param); // Ejecuta el llamado a la función
 			else
 				throw new ExceptionApi(self::ACCESS_DENIED, self::MSG_ACCESS_DENIED, 403); // Manda una excepción controlada
 		}
 		
-		private static function ObtenerEstados($clave = null){
+		private static function ObtenerEstados($data){
 
-			/* si no llega el parámetro, quiere decir que la petición se hizo por form-data o que se quieren leer todos los registros */
-
-			if (is_null($clave)) { // Si no llega el parámetro
-				if (count($_POST) > 0) { // Verifico que por POST haya llegado algo
-					if (isset($_POST['clave'])) // Verifica que exista el identificador clave
-						$consult = "SELECT * FROM vwGetEstados WHERE clave = " . $_POST['clave']; // Genera la consulta para ver un dato en especifico
-					else
-						throw new ExceptionApi(self::ERROR_PARAMETROS, self::MSG_ERROR_PARAMETROS, 422); // Manda una excepción controlada
-				} else {
-					$consult = "SELECT * FROM vwGetEstados"; // Genera consulta para ver todos los datos
-				}
-			}
-			else{ // Si llegó el parámetro (petición realizada mediante JSON)
-				$consult = "SELECT * FROM vwGetEstados WHERE clave = {$clave}"; // Genera la consulta para ver un dato en especifico
-			}
+			if(empty($data))
+				$consult = "SELECT * FROM vwGetEstados";
+			else
+				$consult = "SELECT * FROM vwGetEstados WHERE clave = {$data[0]}";
 				
 			if($res = DBConnection::query_assoc($consult)) // Ejecuta la consulta y retorna un array asociativo 
 				return ["estado" => self::SUCCESS, "datos" => $res];
@@ -79,6 +76,10 @@
 		}
 
 		private static function ObtenerMunicipios($data){
+			echo '<pre>'; 
+			print_r($data);
+			echo '</pre>';
+			exit;
 
 			$consult = "CALL SP_GETMUNICIPIOS($edo)";
 			
@@ -88,7 +89,13 @@
 				throw new ExceptionApi(self::NOT_FOUND, self::MSG_NOT_FOUND, 200);
 		}
 
-		private static function ObtenerLocalidades(){
+		private static function ObtenerLocalidades($data){
+
+			echo '<pre>'; 
+			print_r($data);
+			echo '</pre>';
+			exit;
+
 			$info = json_decode($_POST['info']);
 			$edo  = $info->edo;
 			$mun  = $info->mun;
@@ -143,11 +150,27 @@
 				throw new ExceptionApi(self::NOT_FOUND, self::MSG_NOT_FOUND, 200);
 		}
 
-		private static function ValidaEstructuraEstado($data){
-			
-			$response = FALSE;
-			if ($data !== NULL && count($data) == 1 && isset($data['clave']))
-	    		$response = TRUE;
+		private static function ValidaEstructura($data, $metodo){
+
+			$response = false;
+
+			switch ($metodo) {
+				case 'estados':
+					$response = isset($data['clave']) && count($data) == 1 ? true : false;
+					break;
+				case 'municipios':
+					$response = isset($data['estado']) && count($data) == 1 ? true : false;
+					break;
+				case 'localidades':
+					if(isset($data['estado']) && isset($data['municipio']) && count($data) == 2)
+						$response = true;
+					elseif(isset($data['estado']) && count($data) == 1)
+						$response = true;
+					break;
+				default:
+					$response = false;
+					break;
+			}
 
 	    	return $response;
 
