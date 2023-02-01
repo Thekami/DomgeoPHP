@@ -24,10 +24,17 @@
 		
 		public static function get($parametros){
 
-			$action = "get".ucfirst($parametros[0]); // genero el nombre de la función a ejecutar (ObtenerEstados)
+			$action = "Obtener".ucfirst($parametros[0]); // genero el nombre de la función a ejecutar (ObtenerEstados)
+			$param  = array(); // genera el parámetro.
+
+			foreach ($parametros as $key => $value) {
+				// echo "key {$key} => value {$value} <br>";
+				if($key > 0 && $value !== "")
+					array_push($param, $value); // Reorganiza los parámetros en una array sencillo
+			}
 
 			if(Main::authorization()) // Valida headers
-				return self::$action($parametros[1]); // Ejecuta el llamado a la función
+				return self::$action($param); // Ejecuta el llamado a la función
 			else
 				throw new ExceptionApi(self::ACCESS_DENIED, self::MSG_ACCESS_DENIED, 403); // Manda una excepción controlada
 
@@ -66,7 +73,7 @@
 			if(empty($data))
 				$consult = "SELECT * FROM vwGetEstados";
 			else
-				$consult = "SELECT * FROM vwGetEstados WHERE clave = {$data[0]}";
+				$consult = "SELECT * FROM vwGetEstados WHERE cveEdo = {$data[0]}";
 				
 			if($res = DBConnection::query_assoc($consult)) // Ejecuta la consulta y retorna un array asociativo 
 				return ["estado" => self::SUCCESS, "datos" => $res];
@@ -76,12 +83,9 @@
 		}
 
 		private static function ObtenerMunicipios($data){
-			echo '<pre>'; 
-			print_r($data);
-			echo '</pre>';
-			exit;
 
-			$consult = "CALL SP_GETMUNICIPIOS($edo)";
+			$parametro = empty($data) ? 0: $data[0];
+			$consult   = "CALL SP_GETMUNICIPIOS($parametro)";
 			
 			if($res = DBConnection::query_assoc($consult))
 				return ["estado" => self::SUCCESS, "datos" => $res];
@@ -91,14 +95,8 @@
 
 		private static function ObtenerLocalidades($data){
 
-			echo '<pre>'; 
-			print_r($data);
-			echo '</pre>';
-			exit;
-
-			$info = json_decode($_POST['info']);
-			$edo  = $info->edo;
-			$mun  = $info->mun;
+			$edo = empty($data[0]) ? 0: $data[0];
+			$mun = empty($data[1]) ? 0: $data[1];
 
 			$consult = "CALL SP_GETLOCALIDADES($edo, $mun)";
 			
