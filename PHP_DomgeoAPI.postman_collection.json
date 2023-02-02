@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "b05b9834-9c68-4be9-a468-c825329ac95f",
+		"name": "PHP_DomgeoAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9340182"
+	},
+	"item": [
+		{
+			"name": "GET obtener estados",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "auth",
+						"value": "123",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost/domgeo_api/api/estados/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"domgeo_api",
+						"api",
+						"estados",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST obtener estados",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "auth",
+						"value": "123",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"clave\": \"2\"}"
+				},
+				"url": {
+					"raw": "http://localhost/domgeo_api/api/estados/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"domgeo_api",
+						"api",
+						"estados",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST obtener municipios",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "auth",
+						"value": "123",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost/domgeo_api/api/municipios/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"domgeo_api",
+						"api",
+						"municipios",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST obtener localidades",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "auth",
+						"value": "123",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"estado\": \"6\", \"municipio\": \"10\"}"
+				},
+				"url": {
+					"raw": "http://localhost/domgeo_api/api/localidades/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"domgeo_api",
+						"api",
+						"localidades",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
