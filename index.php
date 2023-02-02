@@ -25,8 +25,14 @@
 	               
 	            </ul>
 	            <ul class="navbar-nav">
+
+					<li class="nav-item dropdown btn-group active">
+	                    <a class="nav-link " href="documentation/">
+	                    	Ver documentación
+	                    </a>
+	                </li>
 	               	
-	                <li class="nav-item dropdown btn-group active">
+	                <!-- <li class="nav-item dropdown btn-group active">
 	                    <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	                    	Documentación
 	                    </a>
@@ -35,7 +41,7 @@
 	                        <a class="dropdown-item" href="documentation/v2/"> Versión 2 </a>
 	                        <a class="dropdown-item" href="documentation/v1/"> Versión 3 </a>
 	                    </div>
-	                </li>
+	                </li> -->
 	                
 				</ul>
 	        </div>
