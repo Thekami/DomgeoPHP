@@ -25,13 +25,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost/domgeo_api/api/estados/6",
+					"raw": "http://localhost/DomgeoPHP/api/estados/6",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"path": [
-						"domgeo_api",
+						"DomgeoPHP",
 						"api",
 						"estados",
 						"6"
@@ -52,17 +52,29 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "{\"clave\": \"2\"}"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "clave",
+							"value": "6",
+							"type": "text"
+						},
+						{
+							"key": "estado",
+							"value": "3",
+							"type": "text",
+							"disabled": true
+						}
+					]
 				},
 				"url": {
-					"raw": "http://localhost/domgeo_api/api/estados/",
+					"raw": "http://localhost/DomgeoPHP/api/estados/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"path": [
-						"domgeo_api",
+						"DomgeoPHP",
 						"api",
 						"estados",
 						""
@@ -83,13 +95,13 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost/domgeo_api/api/municipios/",
+					"raw": "http://localhost/DomgeoPHP/api/municipios/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"path": [
-						"domgeo_api",
+						"DomgeoPHP",
 						"api",
 						"municipios",
 						""
@@ -114,13 +126,13 @@
 					"raw": "{\"estado\": \"6\", \"municipio\": \"10\"}"
 				},
 				"url": {
-					"raw": "http://localhost/domgeo_api/api/localidades/",
+					"raw": "http://localhost/DomgeoPHP/api/localidades/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"path": [
-						"domgeo_api",
+						"DomgeoPHP",
 						"api",
 						"localidades",
 						""
